@@ -11,7 +11,8 @@ const AuthContext: React.Context<CounterContext> = createContext<
 
 export function ProvideAuth({ children }: any) {
   const auth = useProvideAuth();
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  const Provider = AuthContext.Provider;
+  return <Provider value={auth}>{children}</Provider>;
 }
 
 export const useAuth = () => {
@@ -21,8 +22,6 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [user, setUser] = useState(null);
 
-  // Wrap any Firebase methods we want to use making sure ...
-  // ... to save the user to state.
   const login = (usename: string, password: string) => {
     return loginApi(usename, password).then((response) => {
       setUser(response.data.data.accessToken);
@@ -31,23 +30,10 @@ function useProvideAuth() {
     });
   };
 
-  // Subscribe to user on mount
-  // Because this sets state in the callback it will cause any ...
-  // ... component that utilizes this hook to re-render with the ...
-  // ... latest auth object.
   useEffect(() => {
-    // const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-    //   if (user) {
-    //     setUser(user);
-    //   } else {
-    //     setUser(false);
-    //   }
-    // });
-    // Cleanup subscription on unmount
-    // return () => unsubscribe();
+    // TODO 业务逻辑
   }, []);
 
-  // Return the user object and auth methods
   return {
     user,
     login,
