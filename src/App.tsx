@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  HashRouter as Router,
+  Switch,
+  NavLink,
+  Route,
+  Redirect,
+} from 'react-router-dom';
+import routes from './config/routes';
+import ProgressRoute from './components/ProgressRoute';
+import { ProvideAuth } from './utils/authHooks';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ProvideAuth>
+      <Router>
+        <div id="nav">
+          <NavLink exact to="/">
+            Home
+          </NavLink>{' '}
+          <NavLink exact to="/login">
+            Login
+          </NavLink>
+        </div>
+        <Switch>
+          {routes.map((route) => (
+            <ProgressRoute key={route.path} {...route} />
+          ))}
+          <Route path="*" render={() => <Redirect to="/login" />}></Route>
+        </Switch>
+      </Router>
+    </ProvideAuth>
   );
-}
+};
 
 export default App;
